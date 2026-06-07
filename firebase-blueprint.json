@@ -1,0 +1,57 @@
+{
+  "entities": {
+    "PlaidItem": {
+      "title": "PlaidItem",
+      "description": "Stores state and secrets for a connected Plaid Item",
+      "type": "object",
+      "properties": {
+        "accessToken": { "type": "string" },
+        "cursor": { "type": "string" },
+        "baselineStatus": { "type": "string", "enum": ["loading", "ready", "error"] },
+        "roundupsEnabledAt": { "type": "string" },
+        "pendingRoundupBalance": { "type": "number" }
+      },
+      "required": ["accessToken", "baselineStatus", "pendingRoundupBalance"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Stores a single processed transaction",
+      "type": "object",
+      "properties": {
+        "itemId": { "type": "string" },
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "merchantName": { "type": "string" },
+        "amount": { "type": "number" },
+        "roundup": { "type": "number" },
+        "isBaseline": { "type": "boolean" }
+      },
+      "required": ["itemId", "id", "date", "amount", "roundup", "isBaseline"]
+    },
+    "WebhookEvent": {
+      "title": "WebhookEvent",
+      "description": "Stores a processed webhook to avoid replay",
+      "type": "object",
+      "properties": {
+        "itemId": { "type": "string" },
+        "webhookCode": { "type": "string" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["itemId", "webhookCode", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/plaid_items/{itemId}": {
+      "schema": "PlaidItem",
+      "description": "State for a Plaid Item. The document ID is the Item ID."
+    },
+    "/plaid_items/{itemId}/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Transactions for a Plaid Item. Document ID is the Plaid transaction ID."
+    },
+    "/plaid_items/{itemId}/webhooks/{webhookId}": {
+      "schema": "WebhookEvent",
+      "description": "Processed webhooks for this Item"
+    }
+  }
+}

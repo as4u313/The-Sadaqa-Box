@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-feather-green: #58CC02;
+  --color-mask-green: #89E219;
+  --color-macaw-blue: #1CB0F6;
+  --color-cardinal-red: #FF4B4B;
+  --color-bee-yellow: #FFC800;
+  --color-fox-orange: #FF9600;
+  --color-beetle-purple: #CE82FF;
+  --color-humpback-blue: #2B70C9;
+  --color-eel: #4B4B4B;
+  --color-snow: #FFFFFF;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+    background-color: var(--color-snow);
+    color: var(--color-eel);
+}
+
+.progress-bar-bg {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 9999px;
+    height: 6px;
+    width: 100%;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    background-color: #FFFFFF;
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 1s ease-out;
+}
+
+.bg-pattern-mosque {
+    background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M70,80 Q80,60 90,80 L100,100 L0,100 L10,80 Q20,60 30,80 L40,60 Q50,40 60,60 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+    background-size: cover;
+    background-position: bottom;
+}
+
+.bg-pattern-stars {
+     background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="15" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+}
