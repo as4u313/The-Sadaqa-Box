@@ -9,6 +9,12 @@ import { Dashboard } from './components/Dashboard';
 import { LandingPage } from './pages/LandingPage';
 import { Onboarding } from './pages/Onboarding';
 import { TesterView } from './pages/TesterView';
+import { Roundups } from './pages/Roundups';
+import { Goals } from './pages/Goals';
+import { GoalDetail } from './pages/GoalDetail';
+import { Donations } from './pages/Donations';
+import { Impact } from './pages/Impact';
+import { Profile } from './pages/Profile';
 import { DashboardLayout } from './layouts/DashboardLayout';
 
 export default function App() {
@@ -20,10 +26,12 @@ export default function App() {
          
          <Route element={<DashboardLayout />}>
            <Route path="/dashboard" element={<Dashboard />} />
-           <Route path="/goals" element={<div className="p-8">Goals Page WIP</div>} />
-           <Route path="/donations" element={<div className="p-8">Donations Page WIP</div>} />
-           <Route path="/impact" element={<div className="p-8">Impact Page WIP</div>} />
-           <Route path="/profile" element={<div className="p-8">Profile Page WIP</div>} />
+           <Route path="/roundups" element={<Roundups />} />
+           <Route path="/goals" element={<Goals />} />
+           <Route path="/goals/:slug" element={<GoalDetail />} />
+           <Route path="/donations" element={<Donations />} />
+           <Route path="/impact" element={<Impact />} />
+           <Route path="/profile" element={<Profile />} />
          </Route>
 
          <Route path="/dev/tester" element={<TesterView />} />

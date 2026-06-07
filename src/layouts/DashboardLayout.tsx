@@ -47,6 +47,7 @@ export function DashboardLayout() {
             {/* Navigation Links */}
             <nav className="hidden md:flex space-x-8 h-full">
               {navLink('/dashboard', 'Dashboard')}
+              {navLink('/roundups', 'Round-Ups')}
               {navLink('/goals', 'Goals')}
               {navLink('/donations', 'Donations')}
               {navLink('/impact', 'Impact')}

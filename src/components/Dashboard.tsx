@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { causes, palette } from '../data/causes';
 import { 
   Bell, 
@@ -14,13 +15,17 @@ import {
   Quote,
   LayoutGrid,
   Droplets,
-  ArrowRight
+  ArrowRight,
+  Menu
 } from 'lucide-react';
 
 export function Dashboard() {
   const [stats, setStats] = useState<any>(null);
   const [donations, setDonations] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [isSandboxMode, setIsSandboxMode] = useState(false);
+  const [isSimulatingCoffee, setIsSimulatingCoffee] = useState(false);
+  const [coffeeStatus, setCoffeeStatus] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStatsAndDonations = async () => {
@@ -42,6 +47,7 @@ export function Dashboard() {
         if (appDataResp.ok) {
           const appData = await appDataResp.json();
           setTransactions(appData.transactions || []);
+          setIsSandboxMode(appData.isSandbox || false);
         }
       } catch (err) {
         console.error('Failed to fetch dashboard data', err);
@@ -52,6 +58,25 @@ export function Dashboard() {
     const interval = setInterval(fetchStatsAndDonations, 10000);
     return () => clearInterval(interval);
   }, []);
+
+  const simulateCoffeePurchase = async () => {
+    setIsSimulatingCoffee(true);
+    setCoffeeStatus('Test coffee purchase created. Waiting for Plaid sync...');
+    try {
+      const resp = await fetch('/api/simulate_purchase', { method: 'POST' });
+      const data = await resp.json();
+      if (!resp.ok) {
+        throw new Error(data.error || 'Failed to simulate purchase');
+      }
+      setTimeout(() => {
+        setCoffeeStatus('Sadaqa Box Test Coffee synced successfully: +$0.75 roundup');
+      }, 1500);
+    } catch (err: any) {
+      setCoffeeStatus(`Error: ${err.message}`);
+    } finally {
+      setIsSimulatingCoffee(false);
+    }
+  };
 
   const successfulDonations = donations.filter(d => d.status === 'succeeded');
   
@@ -87,6 +112,10 @@ export function Dashboard() {
   const processingDollars = processingCents / 100;
   const monthlyGivingDollars = monthlyGivingCents / 100;
   const roundupsThisMonthDollars = roundupsThisMonthCents / 100;
+  
+  const isLoaded = stats !== null;
+  const renderVal = (v: number) => isLoaded ? `$${v.toFixed(2)}` : <span className="animate-pulse text-transparent bg-gray-200 rounded px-2 w-16 inline-block leading-none">&nbsp;</span>;
+
   
   const totalCharityPool = totalDonatedDollars + pendingDollars;
 
@@ -173,9 +202,9 @@ export function Dashboard() {
                     <Users className="w-4 h-4" />
                     <span>{featuredGoal.contributors || Math.floor(Math.random()*100 + 10)} people contributed</span>
                   </div>
-                  <button className="bg-blue-900 hover:bg-blue-800 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
+                  <Link to={`/goals/${featuredGoal.slug || featuredGoal.id}`} className="bg-blue-900 hover:bg-blue-800 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
                     View Goal <ChevronRight className="w-3 h-3 ml-1" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -186,7 +215,7 @@ export function Dashboard() {
             {gridCauses.map((cause, idx) => {
               const colorClass = palette[idx % palette.length];
               return (
-                <div key={cause.id} className={`bg-${colorClass} rounded-xl text-white p-5 shadow-sm relative overflow-hidden bg-pattern-stars`} style={{ backgroundColor: `var(--color-${colorClass})` }}>
+                <Link to={`/goals/${cause.slug || cause.id}`} key={cause.id} className={`bg-${colorClass} rounded-xl text-white p-5 shadow-sm relative overflow-hidden bg-pattern-stars transition-transform hover:-translate-y-1`} style={{ backgroundColor: `var(--color-${colorClass})` }}>
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex items-start gap-4 mb-3">
                       <div className="text-3xl opacity-90">
@@ -210,16 +239,9 @@ export function Dashboard() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
-          </div>
-          
-          {/* Show More Accordion */}
-          <div className="text-center mb-8 border-t border-gray-200 pt-4 relative">
-            <button className="bg-white text-gray-500 text-sm font-medium px-4 py-1 absolute -top-4 left-1/2 transform -translate-x-1/2 rounded-full border border-gray-200 hover:text-gray-800 hover:bg-gray-50 flex items-center gap-2">
-              Show more goals <ChevronDown className="w-3 h-3" />
-            </button>
           </div>
           
           {/* Footer Quote Area */}
@@ -268,22 +290,23 @@ export function Dashboard() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 font-medium">Monthly Giving</p>
-                    <p className="text-xl font-bold text-gray-900">${monthlyGivingDollars.toFixed(2)}</p>
+                    <p className="text-xl font-bold text-gray-900">{renderVal(monthlyGivingDollars)}</p>
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center justify-between">
+              <Link to="/roundups" className="flex items-center justify-between group cursor-pointer hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-feather-green/10 text-feather-green flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-fox-orange/10 text-fox-orange flex items-center justify-center group-hover:bg-fox-orange group-hover:text-white transition-colors">
                     <Activity className="w-5 h-5" />
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 font-medium">Round-ups This Month</p>
-                    <p className="text-xl font-bold text-gray-900">${roundupsThisMonthDollars.toFixed(2)}</p>
+                    <p className="text-xl font-bold text-gray-900">{renderVal(roundupsThisMonthDollars)}</p>
                   </div>
                 </div>
-              </div>
+                <ChevronRight className="w-5 h-5 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
               
               <div className="border-t border-gray-100 pt-6"></div>
               
@@ -294,7 +317,7 @@ export function Dashboard() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 font-medium">Total Donated</p>
-                    <p className="text-xl font-bold text-gray-900">${totalDonatedDollars.toFixed(2)}</p>
+                    <p className="text-xl font-bold text-gray-900">{renderVal(totalDonatedDollars)}</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -330,9 +353,9 @@ export function Dashboard() {
             </div>
             
             <div className="mt-6 border-t border-gray-100 pt-4 text-center">
-              <a href="#" className="text-sm text-feather-green font-medium hover:text-[#46a302] inline-flex items-center">
+              <Link to="/donations" className="text-sm text-feather-green font-medium hover:text-mask-green inline-flex items-center">
                 View Donation History <ArrowRight className="w-3 h-3 ml-1" />
-              </a>
+              </Link>
             </div>
           </div>
           
@@ -396,6 +419,28 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+          
+          {/* Sandbox Controls */}
+          {isSandboxMode && (
+            <div className="bg-white rounded-xl shadow-sm border border-orange-200 p-6 bg-orange-50/30">
+              <h3 className="text-sm font-bold text-gray-900 mb-2">Sandbox Testing Tools</h3>
+              <p className="text-xs text-gray-500 font-medium leading-relaxed mb-4">
+                Simulate a purchase to see how your round-ups work.
+              </p>
+              <button 
+                onClick={simulateCoffeePurchase}
+                disabled={isSimulatingCoffee}
+                className="w-full bg-humpback-blue hover:bg-blue-600 text-white px-4 py-2 rounded-full font-bold shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-[14px]"
+              >
+                {isSimulatingCoffee ? 'Simulating...' : 'Simulate $4.25 Coffee'}
+              </button>
+              {coffeeStatus && (
+                <p className={`text-[12px] font-bold mt-3 ${coffeeStatus.includes('Error') ? 'text-red-500' : 'text-feather-green'}`}>
+                  {coffeeStatus}
+                </p>
+              )}
+            </div>
+          )}
           
         </div>
       </main>
