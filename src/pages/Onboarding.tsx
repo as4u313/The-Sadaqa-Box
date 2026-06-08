@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ArrowRight, ShieldCheck, HeartPulse } from 'lucide-react';
+import { ChevronRight, ArrowRight, ShieldCheck, HeartPulse, ChevronDown } from 'lucide-react';
+import Confetti from 'react-confetti';
 import { usePlaidLink } from 'react-router-dom';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 import { BankTester } from '../components/BankTester';
@@ -16,6 +17,7 @@ export function Onboarding() {
   const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
   const [multiplierVal, setMultiplierVal] = useState(0);
   const [wholeDollarVal, setWholeDollarVal] = useState(true);
+  const [dailyDonationVal, setDailyDonationVal] = useState(1);
 
   const toggleCause = (id: string) => {
     setSelectedCauses(prev => 
@@ -23,7 +25,7 @@ export function Onboarding() {
     );
   };
 
-  const nextStep = () => setStep(s => Math.min(7, s + 1));
+  const nextStep = () => setStep(s => Math.min(8, s + 1));
   const prevStep = () => setStep(s => Math.max(1, s - 1));
 
   const content = () => {
@@ -114,6 +116,55 @@ export function Onboarding() {
         );
       case 4:
         return (
+          <div className="space-y-8 text-left">
+            <div className="text-center">
+              <h2 className="text-[28px] font-extrabold text-eel tracking-tight mb-4">Daily Donation</h2>
+              <p className="text-gray-500 font-medium text-[17px] leading-relaxed max-w-md mx-auto">
+                Multiply your impact with an automatic fixed amount every day.
+              </p>
+            </div>
+            
+            <div className="max-w-md mx-auto mt-10 mb-8 p-12 py-16 flex flex-col items-center justify-center relative">
+               <div className="flex items-center justify-between w-full">
+                  <button 
+                    onClick={() => setDailyDonationVal(prev => Math.max(0, prev - 0.5))}
+                    className="w-14 h-14 rounded-full border border-gray-200 bg-white flex items-center justify-center text-3xl font-light text-gray-700 hover:bg-gray-100 transition-colors shadow-sm active:scale-95"
+                  >
+                    -
+                  </button>
+                  
+                  <div className="flex items-start justify-center flex-1 text-[#1CB0F6]">
+                    <span className="text-[32px] font-bold mt-4 mr-1">$</span>
+                    <span className="text-[100px] font-bold leading-none tracking-tighter">
+                      {dailyDonationVal === Math.floor(dailyDonationVal) ? dailyDonationVal : dailyDonationVal.toFixed(2)}
+                    </span>
+                  </div>
+
+                  <button 
+                    onClick={() => setDailyDonationVal(prev => prev + 0.5)}
+                    className="w-14 h-14 rounded-full border border-gray-200 bg-white flex items-center justify-center text-3xl font-light text-gray-700 hover:bg-gray-100 transition-colors shadow-sm active:scale-95"
+                  >
+                    +
+                  </button>
+               </div>
+               
+               <div className="mt-12 bg-white border border-gray-200 rounded-full px-4 py-2 flex items-center gap-1.5 text-[15px] text-eel font-medium shadow-sm cursor-pointer hover:bg-gray-100 transition-colors">
+                 <span className="text-gray-500">US</span> USD <ChevronDown className="w-4 h-4 text-gray-400 ml-1" />
+               </div>
+            </div>
+
+            <div className="flex flex-col-reverse sm:flex-row justify-center gap-4 mt-6 bg-white pt-4">
+              <SecondaryButton onClick={prevStep} className="w-full sm:w-auto">
+                Back
+              </SecondaryButton>
+              <PrimaryButton onClick={nextStep} variant="blue" className="w-full sm:w-auto inline-flex items-center justify-center gap-2">
+                Continue <ChevronRight className="w-5 h-5" strokeWidth={3} />
+              </PrimaryButton>
+            </div>
+          </div>
+        );
+      case 5:
+        return (
           <div className="text-center space-y-8">
              <h2 className="text-[28px] font-extrabold text-eel tracking-tight">Choose your causes</h2>
              <p className="text-gray-500 font-medium text-[17px] leading-relaxed max-w-md mx-auto mb-8">
@@ -144,7 +195,7 @@ export function Onboarding() {
             </div>
           </div>
         );
-      case 5:
+      case 6:
          return (
             <div className="space-y-8 text-left">
               <div className="text-center">
@@ -166,7 +217,7 @@ export function Onboarding() {
               </div>
             </div>
          );
-      case 6:
+      case 7:
          return (
             <div className="space-y-8 text-left">
               <div className="text-center">
@@ -188,9 +239,10 @@ export function Onboarding() {
               </div>
             </div>
          );
-      case 7:
+      case 8:
          return (
            <div className="text-center space-y-8">
+              <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={300} />
               <ShieldCheck className="w-20 h-20 text-feather-green mx-auto mb-6" />
               <h2 className="text-[32px] font-black text-eel tracking-tight">All set!</h2>
               <p className="text-gray-500 font-medium text-[18px] leading-relaxed max-w-md mx-auto mb-10">
@@ -210,7 +262,7 @@ export function Onboarding() {
     <div className="min-h-screen bg-snow flex flex-col justify-center items-center py-12 px-4">
       <div className="w-full max-w-2xl bg-white p-8 md:p-12 md:px-16 rounded-[2.5rem] shadow-sm border border-gray-100 relative">
          <div className="flex justify-center gap-3 mb-12">
-           {[1,2,3,4,5,6,7].map(i => (
+           {[1,2,3,4,5,6,7,8].map(i => (
              <div key={i} className={`h-3 rounded-full flex-1 transition-colors duration-500 ${i <= step ? 'bg-macaw-blue' : 'bg-gray-100'}`} />
            ))}
          </div>

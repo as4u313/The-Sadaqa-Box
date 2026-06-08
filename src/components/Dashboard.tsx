@@ -126,22 +126,24 @@ export function Dashboard() {
 
   return (
     <div className="font-sans antialiased bg-snow text-eel mt-4">
+      {/* Page Header */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+              Your Charity Goals
+              <Moon className="text-bee-yellow fill-current w-6 h-6" />
+            </h1>
+            <p className="text-gray-500 mt-1">Every spare change. Every life changed.</p>
+          </div>
+        </div>
+      </div>
+
       {/* Main Content Area */}
-      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8">
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 flex flex-col lg:flex-row gap-8">
         
         {/* Left Column: Goals Area */}
         <div className="flex-1 w-full lg:w-2/3">
-          
-          {/* Page Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                Your Charity Goals
-                <Moon className="text-bee-yellow fill-current w-6 h-6" />
-              </h1>
-              <p className="text-gray-500 mt-1">Every spare change. Every life changed.</p>
-            </div>
-          </div>
           
           {/* Featured Goal */}
           <div className="bg-humpback-blue rounded-xl text-white p-6 relative overflow-hidden mb-6 shadow-md bg-pattern-mosque">
@@ -284,8 +286,6 @@ export function Dashboard() {
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
-              
-              <div className="border-t border-gray-100 pt-6"></div>
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">

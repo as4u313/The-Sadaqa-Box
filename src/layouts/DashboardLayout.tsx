@@ -1,7 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { 
-  Bell, 
   ChevronDown, 
   Moon
 } from 'lucide-react';
@@ -56,15 +55,8 @@ export function DashboardLayout() {
             
             {/* Right Actions */}
             <div className="flex items-center gap-4">
-              {/* Notifications */}
-              <button className="relative p-2 text-gray-400 hover:text-gray-500 rounded-full hover:bg-gray-100 transition">
-                <span className="sr-only">View notifications</span>
-                <Bell className="w-5 h-5"/>
-                <span className="absolute top-1 right-1 block h-4 w-4 rounded-full bg-feather-green text-white text-[10px] font-bold leading-none text-center flex items-center justify-center ring-2 ring-white">3</span>
-              </button>
-              
               {/* Profile Dropdown */}
-              <div className="flex items-center gap-3 border-l border-gray-200 pl-4 cursor-pointer">
+              <div className="flex items-center gap-3 pl-4 cursor-pointer">
                 <div className="h-8 w-8 rounded-full bg-feather-green text-white flex items-center justify-center font-semibold text-sm">
                   AA
                 </div>

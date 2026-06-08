@@ -16,6 +16,7 @@ export function Roundups() {
   const [showSandbox, setShowSandbox] = useState(false);
 
   // Settings State
+  const [autoDonate, setAutoDonate] = useState(true);
   const [multiplierEnabled, setMultiplierEnabled] = useState(true);
   const [multiplier, setMultiplier] = useState('2');
   const [wholeDollar, setWholeDollar] = useState(true);
@@ -124,8 +125,8 @@ export function Roundups() {
              <div className="h-4 bg-gray-200 rounded-full overflow-hidden mb-3">
                 <div className="h-full bg-fox-orange rounded-full transition-all duration-500 ease-out" style={{ width: `${progress}%` }}></div>
              </div>
-             <p className="text-[15px] text-gray-500 font-medium leading-relaxed">
-               Once your pending roundups reach at least ${threshold.toFixed(2)}, Sadaqa Box automatically withdraws the full available roundup balance to support your chosen causes.
+             <p className="text-[15px] text-gray-500 font-medium leading-relaxed mt-2">
+               Automatically donate the entire balance after it reaches $5.
              </p>
            </div>
          </div>
@@ -189,6 +190,30 @@ export function Roundups() {
         </SettingsSection>
       </div>
 
+      {/* Sandbox Controls */}
+      {isSandboxMode && (
+        <div className="mb-12">
+          <div className="bg-white rounded-3xl shadow-sm border border-orange-200 p-8 bg-orange-50/30">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Sandbox Testing</h3>
+            <p className="text-[15px] text-gray-500 font-medium leading-relaxed mb-6">
+              Simulate a purchase to see how your round-ups work.
+            </p>
+            <button 
+              onClick={simulateCoffeePurchase}
+              disabled={isSimulatingCoffee}
+              className="bg-humpback-blue hover:bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-[16px]"
+            >
+              {isSimulatingCoffee ? 'Simulating...' : 'Simulate $4.25 Coffee'}
+            </button>
+            {coffeeStatus && (
+              <p className={`text-[14px] font-bold mt-4 ${coffeeStatus.includes('Error') ? 'text-red-500' : 'text-feather-green'}`}>
+                {coffeeStatus}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="mb-12">
         <h3 className="text-[22px] font-bold mb-6 flex items-center gap-3 text-eel">
            <List className="w-6 h-6 text-gray-400" />
@@ -235,30 +260,6 @@ export function Roundups() {
           )}
         </div>
       </div>
-
-      {/* Sandbox Controls */}
-      {isSandboxMode && (
-        <div className="mb-12">
-          <div className="bg-white rounded-3xl shadow-sm border border-orange-200 p-8 bg-orange-50/30">
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Sandbox Testing</h3>
-            <p className="text-[15px] text-gray-500 font-medium leading-relaxed mb-6">
-              Simulate a purchase to see how your round-ups work.
-            </p>
-            <button 
-              onClick={simulateCoffeePurchase}
-              disabled={isSimulatingCoffee}
-              className="bg-humpback-blue hover:bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-[16px]"
-            >
-              {isSimulatingCoffee ? 'Simulating...' : 'Simulate $4.25 Coffee'}
-            </button>
-            {coffeeStatus && (
-              <p className={`text-[14px] font-bold mt-4 ${coffeeStatus.includes('Error') ? 'text-red-500' : 'text-feather-green'}`}>
-                {coffeeStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
 
     </div>
   );

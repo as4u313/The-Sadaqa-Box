@@ -740,9 +740,7 @@ async function startServer() {
       
       await saveTransactions(activeItem.itemId, [mockTx]);
       
-      const currentBalance = activeItem.pendingRoundupBalance || 0;
-      activeItem.pendingRoundupBalance = Number((currentBalance + mockTx.roundup).toFixed(2));
-      await savePlaidItem(activeItem.itemId, activeItem);
+      const diag = await applyNewRoundupsAndEvaluateWithdrawal(activeItem.itemId, Math.round(mockTx.roundup * 100), "simulate_purchase");
 
       // Attempt to fire webhook to trigger native generic sync as well, ignoring failure if blocked
       try {
