@@ -23,9 +23,6 @@ export function Dashboard() {
   const [stats, setStats] = useState<any>(null);
   const [donations, setDonations] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
-  const [isSandboxMode, setIsSandboxMode] = useState(false);
-  const [isSimulatingCoffee, setIsSimulatingCoffee] = useState(false);
-  const [coffeeStatus, setCoffeeStatus] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStatsAndDonations = async () => {
@@ -47,7 +44,6 @@ export function Dashboard() {
         if (appDataResp.ok) {
           const appData = await appDataResp.json();
           setTransactions(appData.transactions || []);
-          setIsSandboxMode(appData.isSandbox || false);
         }
       } catch (err) {
         console.error('Failed to fetch dashboard data', err);
@@ -58,25 +54,6 @@ export function Dashboard() {
     const interval = setInterval(fetchStatsAndDonations, 10000);
     return () => clearInterval(interval);
   }, []);
-
-  const simulateCoffeePurchase = async () => {
-    setIsSimulatingCoffee(true);
-    setCoffeeStatus('Test coffee purchase created. Waiting for Plaid sync...');
-    try {
-      const resp = await fetch('/api/simulate_purchase', { method: 'POST' });
-      const data = await resp.json();
-      if (!resp.ok) {
-        throw new Error(data.error || 'Failed to simulate purchase');
-      }
-      setTimeout(() => {
-        setCoffeeStatus('Sadaqa Box Test Coffee synced successfully: +$0.75 roundup');
-      }, 1500);
-    } catch (err: any) {
-      setCoffeeStatus(`Error: ${err.message}`);
-    } finally {
-      setIsSimulatingCoffee(false);
-    }
-  };
 
   const successfulDonations = donations.filter(d => d.status === 'succeeded');
   
@@ -420,27 +397,6 @@ export function Dashboard() {
             </div>
           </div>
           
-          {/* Sandbox Controls */}
-          {isSandboxMode && (
-            <div className="bg-white rounded-xl shadow-sm border border-orange-200 p-6 bg-orange-50/30">
-              <h3 className="text-sm font-bold text-gray-900 mb-2">Sandbox Testing Tools</h3>
-              <p className="text-xs text-gray-500 font-medium leading-relaxed mb-4">
-                Simulate a purchase to see how your round-ups work.
-              </p>
-              <button 
-                onClick={simulateCoffeePurchase}
-                disabled={isSimulatingCoffee}
-                className="w-full bg-humpback-blue hover:bg-blue-600 text-white px-4 py-2 rounded-full font-bold shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-[14px]"
-              >
-                {isSimulatingCoffee ? 'Simulating...' : 'Simulate $4.25 Coffee'}
-              </button>
-              {coffeeStatus && (
-                <p className={`text-[12px] font-bold mt-3 ${coffeeStatus.includes('Error') ? 'text-red-500' : 'text-feather-green'}`}>
-                  {coffeeStatus}
-                </p>
-              )}
-            </div>
-          )}
           
         </div>
       </main>

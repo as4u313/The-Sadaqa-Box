@@ -238,50 +238,25 @@ export function Roundups() {
 
       {/* Sandbox Controls */}
       {isSandboxMode && (
-        <div className="mt-16 bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
-          <button 
-            onClick={() => setShowSandbox(!showSandbox)}
-            className="w-full flex justify-between items-center p-8 text-left hover:bg-slate-50 transition-colors"
-          >
-            <div className="flex items-center gap-4">
-               <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 shadow-sm">
-                 <Settings2 className="w-6 h-6" />
-               </div>
-               <div>
-                 <h3 className="font-bold text-slate-900 text-[20px]">Sandbox Testing Tools</h3>
-                 <p className="text-[15px] border-s border-0 text-slate-500 font-medium mt-1">Developer diagnostics and manual test triggers</p>
-               </div>
-            </div>
-            {showSandbox ? <ChevronDown className="w-6 h-6 text-slate-400" /> : <ChevronRight className="w-6 h-6 text-slate-400" />}
-          </button>
-          {showSandbox && (
-            <div className="p-8 border-t border-slate-100 flex flex-col gap-8 bg-slate-50/50">
-               
-               <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col items-start gap-5">
-                 <h4 className="font-extrabold text-[20px] text-slate-800">Simulate Purchase</h4>
-                 <p className="text-[16px] text-slate-500 font-medium max-w-lg leading-relaxed">Creates a $4.25 purchase from "Sadaqa Box Test Coffee" mapped to today, which will generate a $0.75 roundup in Sandbox mode.</p>
-                 <button 
-                  onClick={simulateCoffeePurchase}
-                  disabled={isSimulatingCoffee}
-                  className="bg-humpback-blue hover:bg-blue-600 text-white px-8 py-3.5 rounded-full font-bold shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-[17px] mt-2"
-                 >
-                   {isSimulatingCoffee ? 'Simulating...' : 'Simulate New $4.25 Coffee Purchase'}
-                 </button>
-                 {coffeeStatus && (
-                   <p className={`text-[15px] font-bold mt-2 ${coffeeStatus.includes('Error') ? 'text-red-500' : 'text-feather-green'}`}>
-                     {coffeeStatus}
-                   </p>
-                 )}
-               </div>
-
-               <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
-                  <BankTester isEmbedded />
-               </div>
-               <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
-                  <RoundupWithdrawalTester isEmbedded />
-               </div>
-            </div>
-          )}
+        <div className="mb-12">
+          <div className="bg-white rounded-3xl shadow-sm border border-orange-200 p-8 bg-orange-50/30">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Sandbox Testing</h3>
+            <p className="text-[15px] text-gray-500 font-medium leading-relaxed mb-6">
+              Simulate a purchase to see how your round-ups work.
+            </p>
+            <button 
+              onClick={simulateCoffeePurchase}
+              disabled={isSimulatingCoffee}
+              className="bg-humpback-blue hover:bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-[16px]"
+            >
+              {isSimulatingCoffee ? 'Simulating...' : 'Simulate $4.25 Coffee'}
+            </button>
+            {coffeeStatus && (
+              <p className={`text-[14px] font-bold mt-4 ${coffeeStatus.includes('Error') ? 'text-red-500' : 'text-feather-green'}`}>
+                {coffeeStatus}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
